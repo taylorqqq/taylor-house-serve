@@ -109,48 +109,4 @@ router.post("/add", async (req, res, next) => {
     });
   }
 });
-router.patch("/update", (req, res, next) => {
-  let token = req.headers.token;
-  let { id, type } = req.body;
-
-  jwt.verify(token, "abc", async (err, info) => {
-    if (!err) {
-      let usertype = info.usertype;
-      if (usertype == 3) {
-        let result = await menuinfoService.update(
-          {
-            _id: id,
-          },
-          {
-            $set: {
-              bugtype: type,
-            },
-          }
-        );
-        if (result.modifiedCount) {
-          //新增受影响的行数
-          res.json({
-            code: 1,
-            msg: "修改成功",
-          });
-        } else {
-          res.json({
-            code: 0,
-            msg: "修改失败",
-          });
-        }
-      } else {
-        res.json({
-          code: 0,
-          msg: "权限不够",
-        });
-      }
-    } else {
-      res.json({
-        code: 0,
-        msg: "token解析异常",
-      });
-    }
-  });
-});
 module.exports = router;
